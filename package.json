@@ -1,0 +1,53 @@
+{
+  "name": "invoice-manager-app",
+  "version": "0.9.0",
+  "description": "Web application for managing an invoice API using React",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/crolopez/invoice-manager-app/"
+  },
+  "author": "Cristobal Lopez <crolopezp@gmail.com>",
+  "license": "GPL-3.0",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "test:ci": "react-scripts test --ci=true",
+    "lint": "eslint -c .eslintrc.js src"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "bootswatch": "^5.1.3",
+    "dotenv": "^10.0.0",
+    "react": "^17.0.2",
+    "react-date-picker": "^8.3.6",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
+    "react-scripts": "4.0.3",
+    "web-vitals": "^1.0.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^16.11.10",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "typescript": "^4.5.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
