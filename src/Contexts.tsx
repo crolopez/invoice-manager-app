@@ -6,6 +6,8 @@ import { defaultInvoice } from './utils/defaultInvoice'
 import { Invoice } from './types/Invoice'
 import { FormState } from './types/FormState'
 import { FormMode } from './types/FormMode'
+import { ErrorDisplayState } from './types/ErrorDisplayState'
+import { ApiError } from './types/apiResponse/ApiError'
 
 const dummyInvoiceFunc = (x: Invoice): void => {}
 export const InvoiceSubmitHandlerContext = React.createContext<(invoice: Invoice) => void>(dummyInvoiceFunc)
@@ -26,3 +28,9 @@ const dummySetFormMode = (x: React.SetStateAction<FormMode>) => void {}
 const dummyFormState: FormState = {
   invoice: defaultInvoice, setInvoice: dummySetInvoice, formMode: FormMode.Register, setFormMode: dummySetFormMode}
 export const FormStateContext = React.createContext<FormState>(dummyFormState)
+
+const dummyApiErrors: ApiError[] = [{ id: '', detail: '' }]
+const dummySetErrorDisplay = (x: React.SetStateAction<ApiError[]>) => void {}
+const dummyErrorDisplayState: ErrorDisplayState = {
+  apiErrors: dummyApiErrors, setApiErrors: dummySetErrorDisplay }
+export const ApiErrorStateContext = React.createContext<ErrorDisplayState>(dummyErrorDisplayState)

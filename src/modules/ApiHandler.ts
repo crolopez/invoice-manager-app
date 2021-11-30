@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Invoice } from '../types/Invoice'
 import { ApiResponse } from '../types/apiResponse/ApiResponse'
 import { ApiMapper } from './ApiMapper'
+import { ApiError } from '../types/apiResponse/ApiError'
 
 const API_ENDPOINT = getConfig().API_ENDPOINT
 const requestHeaders = {
@@ -16,13 +17,20 @@ const requestHeaders = {
   },
 }
 
-function getNoDataError(): Error {
-  return Error('Invalid API response')
+function getNoDataError(): ApiError[] {
+  return [{
+    id: 'Unknown error',
+    detail: '',
+  }]
 }
 
 export class ApiHandler {
   static async addInvoice(invoice: Invoice): Promise<Invoice> {
     const { data } = await axios.post<ApiResponse>(API_ENDPOINT, invoice, requestHeaders)
+
+    if (data.errors != undefined) {
+      throw data.errors
+    }
 
     if (data.data == undefined) {
       throw getNoDataError()
@@ -35,6 +43,10 @@ export class ApiHandler {
     const requestUrl = `${API_ENDPOINT}/${id}`
     const { data } = await axios.delete(requestUrl, requestHeaders)
 
+    if (data.errors != undefined) {
+      throw data.errors
+    }
+
     if (data.data == undefined) {
       throw getNoDataError()
     }
@@ -44,6 +56,10 @@ export class ApiHandler {
 
   static async getInvoices(): Promise<Invoice[]> {
     const { data } = await axios.get<ApiResponse>(API_ENDPOINT, requestHeaders)
+
+    if (data.errors != undefined) {
+      throw data.errors
+    }
 
     if (data.data == undefined) {
       throw getNoDataError()
@@ -56,6 +72,10 @@ export class ApiHandler {
   static async updateInvoice(invoice: Invoice): Promise<Invoice> {
     const requestUrl = `${API_ENDPOINT}/${invoice.invoiceId}`
     const { data } = await axios.put<ApiResponse>(requestUrl, invoice, requestHeaders)
+
+    if (data.errors != undefined) {
+      throw data.errors
+    }
 
     if (data.data == undefined) {
       throw getNoDataError()

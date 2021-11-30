@@ -7,7 +7,7 @@ export default function InvoiceCard(): JSX.Element {
   const updateInvoice = useContext(UpdateInvoiceContext)
 
   return (
-    <div className='card card-body bg-primary rounded-0'>
+    <div className='card card-body bg-primary'>
       <h2>{invoice.invoiceId}</h2>
       <p>Supplier: {invoice.supplier}</p>
       <p>Amount: {invoice.amount}</p>

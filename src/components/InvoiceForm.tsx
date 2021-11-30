@@ -1,6 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useRef } from 'react'
 import DatePicker from 'react-date-picker'
-import { FormStateContext, InvoiceSubmitHandlerContext } from '../Contexts'
+import { ApiErrorStateContext, FormStateContext, InvoiceSubmitHandlerContext } from '../Contexts'
 import { FormMode } from '../types/FormMode'
 import { defaultInvoice } from '../utils/defaultInvoice'
 
@@ -17,6 +17,7 @@ export default function InvoiceForm(): JSX.Element {
   // Contexts
   const invoiceSubmitHandler = useContext(InvoiceSubmitHandlerContext)
   const formState = useContext(FormStateContext)
+  const apiErrorState = useContext(ApiErrorStateContext)
 
   const resetForm = () => {
     formState.setInvoice(defaultInvoice)
@@ -40,6 +41,7 @@ export default function InvoiceForm(): JSX.Element {
   }
 
   const handleClearInvoice = (event: ButtonClickEvent) => {
+    apiErrorState.setApiErrors([])
     event.preventDefault()
     resetForm()
   }

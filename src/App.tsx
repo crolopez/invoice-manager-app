@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import './App.css'
 import InvoiceForm from './components/InvoiceForm'
 import InvoiceList from './components/InvoiceList'
-import { DeleteInvoiceContext, FormStateContext, InvoicesContext, InvoiceSubmitHandlerContext, SetInvoicesContext, UpdateInvoiceContext } from './Contexts'
+import { ApiErrorStateContext, DeleteInvoiceContext, FormStateContext, InvoicesContext, InvoiceSubmitHandlerContext, SetInvoicesContext, UpdateInvoiceContext } from './Contexts'
 import { Invoice } from './types/Invoice'
 import { defaultInvoice } from './utils/defaultInvoice'
 import { ApiHandler } from './modules/ApiHandler'
 import InvoiceRefresh from './components/InvoiceRefresh'
 import { FormMode } from './types/FormMode'
+import { ApiError } from './types/apiResponse/ApiError'
+import ErrorDisplay from './components/ErrorDisplay'
 
 interface Props {
   title: string
@@ -17,14 +19,15 @@ export function App({ title }: Props): JSX.Element {
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [formInvoice, setFormInvoice] = useState<Invoice>(defaultInvoice)
   const [formMode, setFormMode] = useState<FormMode>(FormMode.Register)
+  const [apiErrors, setApiErrors] = useState<ApiError[]>([])
 
   // Component functions
   const addInvoice = async (invoice: Invoice): Promise<void> => {
     try {
       invoice = await ApiHandler.addInvoice(invoice)
       setInvoices([...invoices, invoice])
-    } catch(e) {
-      console.log(e)
+    } catch(e: any) {
+      setApiErrors(e as ApiError[])
     }
   }
 
@@ -35,8 +38,8 @@ export function App({ title }: Props): JSX.Element {
         if (x.invoiceId !== invoice.invoiceId) return x
         return invoice
       }))
-    } catch(e) {
-      console.log(e)
+    } catch(e: any) {
+      setApiErrors(e as ApiError[])
     }
   }
 
@@ -45,8 +48,9 @@ export function App({ title }: Props): JSX.Element {
     try {
       ApiHandler.deleteInvoice(id)
       setInvoices(invoices.filter(invoice => invoice.invoiceId !== id))
-    } catch(e) {
-      console.log(e)
+      setApiErrors([])
+    } catch(e: any) {
+      setApiErrors(e as ApiError[])
     }
   }
 
@@ -57,6 +61,7 @@ export function App({ title }: Props): JSX.Element {
 
   // Form component functions
   const invoiceSubmitHandler = async (invoice: Invoice): Promise<void> => {
+    setApiErrors([])
     if (formMode == FormMode.Register) {
       await addInvoice(invoice)
       return
@@ -74,21 +79,26 @@ export function App({ title }: Props): JSX.Element {
 
           </a>
           <a className='navbar-brand'>
-            <SetInvoicesContext.Provider value={setInvoices}>
-              <InvoiceRefresh/>
-            </SetInvoicesContext.Provider>
+            <ApiErrorStateContext.Provider value={{ apiErrors: apiErrors, setApiErrors: setApiErrors }}>
+              <SetInvoicesContext.Provider value={setInvoices}>
+                <InvoiceRefresh/>
+              </SetInvoicesContext.Provider>
+            </ApiErrorStateContext.Provider>
           </a>
         </div>
       </nav>
       <main className='container p-4'>
         <div className="row">
           <div className='col-md-4'>
-            <InvoiceSubmitHandlerContext.Provider value={invoiceSubmitHandler}>
-              <FormStateContext.Provider value={{ invoice: formInvoice, setInvoice: setFormInvoice,
-                formMode: formMode, setFormMode: setFormMode }}>
-                <InvoiceForm/>
-              </FormStateContext.Provider>
-            </InvoiceSubmitHandlerContext.Provider>
+            <ApiErrorStateContext.Provider value={{ apiErrors: apiErrors, setApiErrors: setApiErrors }}>
+              <InvoiceSubmitHandlerContext.Provider value={invoiceSubmitHandler}>
+                <FormStateContext.Provider value={{ invoice: formInvoice, setInvoice: setFormInvoice,
+                  formMode: formMode, setFormMode: setFormMode }}>
+                  <InvoiceForm/>
+                </FormStateContext.Provider>
+              </InvoiceSubmitHandlerContext.Provider>
+              <ErrorDisplay/>
+            </ApiErrorStateContext.Provider>
           </div>
           <div className='col-md-8'>
             <div className='row'>
