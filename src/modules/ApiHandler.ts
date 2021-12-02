@@ -1,4 +1,4 @@
-import { getConfig } from '../utils/config'
+import { getConfig } from '../utils/getConfig'
 import axios from 'axios'
 import { Invoice } from '../types/Invoice'
 import { ApiResponse } from '../types/apiResponse/ApiResponse'
