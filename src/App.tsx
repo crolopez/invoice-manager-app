@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './App.css'
 import InvoiceForm from './components/InvoiceForm'
 import InvoiceList from './components/InvoiceList'
-import { ApiErrorStateContext, DeleteInvoiceContext, FormStateContext, InvoicesContext, InvoiceSubmitHandlerContext, SetInvoicesContext, UpdateInvoiceContext } from './Contexts'
+import { ApiErrorStateContext, CopyInvoiceContext, DeleteInvoiceContext, FormStateContext, InvoicesContext, InvoiceSubmitHandlerContext, SetInvoicesContext, UpdateInvoiceContext } from './Contexts'
 import { Invoice } from './types/Invoice'
 import { defaultInvoice } from './utils/defaultInvoice'
 import { ApiHandler } from './modules/ApiHandler'
@@ -59,6 +59,11 @@ export function App({ title }: Props): JSX.Element {
     setFormMode(FormMode.Update)
   }
 
+  const copyFormInvoice = (invoice: Invoice): void => {
+    setFormInvoice(invoice)
+    setFormMode(FormMode.Register)
+  }
+
   // Form component functions
   const invoiceSubmitHandler = async (invoice: Invoice): Promise<void> => {
     setApiErrors([])
@@ -104,9 +109,11 @@ export function App({ title }: Props): JSX.Element {
             <div className='row'>
               <DeleteInvoiceContext.Provider value={deleteInvoice}>
                 <UpdateInvoiceContext.Provider value={updateFormInvoice}>
-                  <InvoicesContext.Provider value={invoices}>
-                    <InvoiceList/>
-                  </InvoicesContext.Provider>
+                  <CopyInvoiceContext.Provider value={copyFormInvoice}>
+                    <InvoicesContext.Provider value={invoices}>
+                      <InvoiceList/>
+                    </InvoicesContext.Provider>
+                  </CopyInvoiceContext.Provider>
                 </UpdateInvoiceContext.Provider>
               </DeleteInvoiceContext.Provider>
             </div>

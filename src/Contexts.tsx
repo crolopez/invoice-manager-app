@@ -14,6 +14,8 @@ export const InvoiceSubmitHandlerContext = React.createContext<(invoice: Invoice
 
 export const UpdateInvoiceContext = React.createContext<(invoice: Invoice) => void>(dummyInvoiceFunc)
 
+export const CopyInvoiceContext = React.createContext<(invoice: Invoice) => void>(dummyInvoiceFunc)
+
 const dummyDelete = (x: string): void => {}
 export const DeleteInvoiceContext = React.createContext<(id: string) => void>(dummyDelete)
 
