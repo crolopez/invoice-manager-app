@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './App.css'
 import InvoiceForm from './components/InvoiceForm'
 import InvoiceList from './components/InvoiceList'
-import { ApiErrorStateContext, CopyInvoiceContext, DeleteInvoiceContext, FormStateContext, InvoicesContext, InvoiceSubmitHandlerContext, SetInvoicesContext, UpdateInvoiceContext } from './Contexts'
+import { ApiErrorStateContext, AuthTokenStateContext, CopyInvoiceContext, DeleteInvoiceContext, FormStateContext, InvoicesContext, InvoiceSubmitHandlerContext, SetInvoicesContext, UpdateInvoiceContext } from './Contexts'
 import { Invoice } from './types/Invoice'
 import { defaultInvoice } from './utils/defaultInvoice'
 import { ApiHandler } from './modules/ApiHandler'
@@ -10,6 +10,7 @@ import InvoiceRefresh from './components/InvoiceRefresh'
 import { FormMode } from './types/FormMode'
 import { ApiError } from './types/apiResponse/ApiError'
 import ErrorDisplay from './components/ErrorDisplay'
+import GoogleAuth from './components/auth/GoogleAuth'
 
 interface Props {
   title: string
@@ -20,11 +21,12 @@ export function App({ title }: Props): JSX.Element {
   const [formInvoice, setFormInvoice] = useState<Invoice>(defaultInvoice)
   const [formMode, setFormMode] = useState<FormMode>(FormMode.Register)
   const [apiErrors, setApiErrors] = useState<ApiError[]>([])
+  const [authToken, setAuthToken] = useState<string>('')
 
   // Component functions
   const addInvoice = async (invoice: Invoice): Promise<void> => {
     try {
-      invoice = await ApiHandler.addInvoice(invoice)
+      invoice = await ApiHandler.addInvoice(invoice, authToken)
       setInvoices([...invoices, invoice])
     } catch(e: any) {
       setApiErrors(e as ApiError[])
@@ -33,7 +35,7 @@ export function App({ title }: Props): JSX.Element {
 
   const replaceInvoice = async (invoice: Invoice): Promise<void> => {
     try {
-      invoice = await ApiHandler.updateInvoice(invoice)
+      invoice = await ApiHandler.updateInvoice(invoice, authToken)
       setInvoices(invoices.map(x => {
         if (x.invoiceId !== invoice.invoiceId) return x
         return invoice
@@ -46,7 +48,7 @@ export function App({ title }: Props): JSX.Element {
   // Card component functions
   const deleteInvoice = (id: string): void => {
     try {
-      ApiHandler.deleteInvoice(id)
+      ApiHandler.deleteInvoice(id, authToken)
       setInvoices(invoices.filter(invoice => invoice.invoiceId !== id))
       setApiErrors([])
     } catch(e: any) {
@@ -84,11 +86,14 @@ export function App({ title }: Props): JSX.Element {
 
           </a>
           <a className='navbar-brand'>
-            <ApiErrorStateContext.Provider value={{ apiErrors: apiErrors, setApiErrors: setApiErrors }}>
-              <SetInvoicesContext.Provider value={setInvoices}>
-                <InvoiceRefresh/>
-              </SetInvoicesContext.Provider>
-            </ApiErrorStateContext.Provider>
+            <AuthTokenStateContext.Provider value={{ authToken: authToken, setAuthToken: setAuthToken }}>
+              <ApiErrorStateContext.Provider value={{ apiErrors: apiErrors, setApiErrors: setApiErrors }}>
+                <SetInvoicesContext.Provider value={setInvoices}>
+                  <InvoiceRefresh/>
+                </SetInvoicesContext.Provider>
+              </ApiErrorStateContext.Provider>
+              <GoogleAuth/>
+            </AuthTokenStateContext.Provider>
           </a>
         </div>
       </nav>

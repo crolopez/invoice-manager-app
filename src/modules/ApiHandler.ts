@@ -14,6 +14,7 @@ const requestHeaders = {
     'Connection': 'keep-alive',
     'Content-Type': 'application/json',
     'Host': 'invoice-manager-app',
+    'Authorization': '',
   },
 }
 
@@ -24,9 +25,19 @@ function getNoDataError(): ApiError[] {
   }]
 }
 
+function getHeaders(authToken: string): any {
+  return {
+    headers:
+    {
+      ...requestHeaders.headers,
+      'Authorization': `token ${authToken}`,
+    },
+  }
+}
+
 export class ApiHandler {
-  static async addInvoice(invoice: Invoice): Promise<Invoice> {
-    const { data } = await axios.post<ApiResponse>(API_ENDPOINT, invoice, requestHeaders)
+  static async addInvoice(invoice: Invoice, authToken: string): Promise<Invoice> {
+    const { data } = await axios.post<ApiResponse>(API_ENDPOINT, invoice, getHeaders(authToken))
 
     if (data.errors != undefined) {
       throw data.errors
@@ -39,9 +50,9 @@ export class ApiHandler {
     return ApiMapper.apiAttributesToInvoice(data.data[0].attributes)
   }
 
-  static async deleteInvoice(id: string): Promise<void> {
+  static async deleteInvoice(id: string, authToken: string): Promise<void> {
     const requestUrl = `${API_ENDPOINT}/${id}`
-    const { data } = await axios.delete(requestUrl, requestHeaders)
+    const { data } = await axios.delete(requestUrl, getHeaders(authToken))
 
     if (data.errors != undefined) {
       throw data.errors
@@ -54,8 +65,8 @@ export class ApiHandler {
     return
   }
 
-  static async getInvoices(): Promise<Invoice[]> {
-    const { data } = await axios.get<ApiResponse>(API_ENDPOINT, requestHeaders)
+  static async getInvoices(authToken: string): Promise<Invoice[]> {
+    const { data } = await axios.get<ApiResponse>(API_ENDPOINT, getHeaders(authToken))
 
     if (data.errors != undefined) {
       throw data.errors
@@ -69,9 +80,9 @@ export class ApiHandler {
       ApiMapper.apiAttributesToInvoice(x.attributes))
   }
 
-  static async updateInvoice(invoice: Invoice): Promise<Invoice> {
+  static async updateInvoice(invoice: Invoice, authToken: string): Promise<Invoice> {
     const requestUrl = `${API_ENDPOINT}/${invoice.invoiceId}`
-    const { data } = await axios.put<ApiResponse>(requestUrl, invoice, requestHeaders)
+    const { data } = await axios.put<ApiResponse>(requestUrl, invoice, getHeaders(authToken))
 
     if (data.errors != undefined) {
       throw data.errors

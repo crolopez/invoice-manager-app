@@ -1,14 +1,15 @@
 import { useContext } from 'react'
-import { ApiErrorStateContext, SetInvoicesContext } from '../Contexts'
+import { ApiErrorStateContext, AuthTokenStateContext, SetInvoicesContext } from '../Contexts'
 import { ApiHandler } from '../modules/ApiHandler'
 
 export default function InvoiceRefresh(): JSX.Element {
   const setInvoices = useContext(SetInvoicesContext)
   const apiErrorState = useContext(ApiErrorStateContext)
+  const { authToken } = useContext(AuthTokenStateContext)
 
   const refresh = async (): Promise<void> => {
     try {
-      const invoices = await ApiHandler.getInvoices()
+      const invoices = await ApiHandler.getInvoices(authToken)
       setInvoices(invoices)
       apiErrorState.setApiErrors([])
     } catch(e) {

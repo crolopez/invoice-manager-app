@@ -8,6 +8,7 @@ import { FormState } from './types/FormState'
 import { FormMode } from './types/FormMode'
 import { ErrorDisplayState } from './types/ErrorDisplayState'
 import { ApiError } from './types/apiResponse/ApiError'
+import { AuthTokenState } from './types/AuthTokenState'
 
 const dummyInvoiceFunc = (x: Invoice): void => {}
 export const InvoiceSubmitHandlerContext = React.createContext<(invoice: Invoice) => void>(dummyInvoiceFunc)
@@ -30,6 +31,13 @@ const dummySetFormMode = (x: React.SetStateAction<FormMode>) => void {}
 const dummyFormState: FormState = {
   invoice: defaultInvoice, setInvoice: dummySetInvoice, formMode: FormMode.Register, setFormMode: dummySetFormMode}
 export const FormStateContext = React.createContext<FormState>(dummyFormState)
+
+
+const dummySetAuthToken = (x: React.SetStateAction<string>) => void {}
+const dummyAuthTokenState: AuthTokenState = {
+  authToken: '', setAuthToken: dummySetAuthToken
+}
+export const AuthTokenStateContext = React.createContext<AuthTokenState>(dummyAuthTokenState)
 
 const dummyApiErrors: ApiError[] = [{ id: '', detail: '' }]
 const dummySetErrorDisplay = (x: React.SetStateAction<ApiError[]>) => void {}

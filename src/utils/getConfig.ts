@@ -7,5 +7,6 @@ export function getConfig(): Config {
   }
   return {
     API_ENDPOINT: AppConfig.REACT_APP_API_ENDPOINT,
+    GOOGLE_CLIENT_ID: AppConfig.GOOGLE_CLIENT_ID,
   }
 }
