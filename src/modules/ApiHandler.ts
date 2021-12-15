@@ -54,8 +54,9 @@ export class ApiHandler {
     return
   }
 
-  static async getInvoices(): Promise<Invoice[]> {
-    const { data } = await axios.get<ApiResponse>(API_ENDPOINT, requestHeaders)
+  static async getInvoices(currency: string): Promise<Invoice[]> {
+    const requestUrl = `${API_ENDPOINT}${currency != '' ? `?currency=${currency}` : ''}`
+    const { data } = await axios.get<ApiResponse>(requestUrl, requestHeaders)
 
     if (data.errors != undefined) {
       throw data.errors
