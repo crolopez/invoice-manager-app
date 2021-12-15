@@ -7,7 +7,7 @@ export class ApiMapper {
       invoiceId: attributes.invoiceId,
       supplier: attributes.supplier,
       amount: attributes.amount,
-      dateIssued: attributes.dateIssued,
+      dateIssued: new Date(attributes.dateIssued),
       currency: attributes.currency,
       description: attributes.description,
     }

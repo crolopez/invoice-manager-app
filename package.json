@@ -1,6 +1,6 @@
 {
   "name": "invoice-manager-app",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Web application for managing an invoice API using React",
   "repository": {
     "type": "git",
