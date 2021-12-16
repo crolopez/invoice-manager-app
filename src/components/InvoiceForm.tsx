@@ -49,10 +49,12 @@ export default function InvoiceForm(): JSX.Element {
   useEffect(() => {
     if (headerRef.current == null
       || saveButtonRef.current == null
-      || updateButtonRef.current == null) return
+      || updateButtonRef.current == null
+      || invoiceIdRef.current == null) return
 
     const registerMode = FormMode.Register == formState.formMode
 
+    invoiceIdRef.current.readOnly = !registerMode
     headerRef.current.textContent = registerMode
       ? 'Register an invoice': 'Update an invoice'
     saveButtonRef.current.hidden = !registerMode
